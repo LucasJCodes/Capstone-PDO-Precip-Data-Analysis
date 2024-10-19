@@ -16,16 +16,41 @@ def PDO_index(ssts):
     """
 
     import xarray as xr
-
-    #input the data
+    from eofs.xarray import Eof
+    from eofs.examples import example_data_path  #for testing purposes
+    import numpy as np
 
     #take the time mean and hold it in a data set 
+    #timeAvg = ssts.mean(dim = "time")
 
     #use the time mean and original data to calulate an anomaly dataset
+    #anom = ssts - timeAvg
 
-    #weight the data based on grid cell area
+    file = example_data_path('sst_ndjfm_anom.nc')  #test data
+    data = xr.open_dataset(file)['sst']
+    print(data)
+
+    #weight the data based on grid cell area by taking the square root of the cosine of latitude
+    #store weightings in a numpy array
+    #weights = np.sqrt(np.cos(np.deg2rad(anom["lat"].values)))
+
+    ex_weights = np.sqrt(np.cos(np.deg2rad(data["latitude"])))
 
     #create and EOF solver object in eofs class
+    calc_eof = Eof(data, weights = ex_weights)
 
-    #output principle component 1
+    #get the 1st principle component (PC1)
+    pc1 = calc_eof.pcs(pcscaling = 1, npcs = 1)
+
+    #output PC1
+    return pc1
+
+#testing of the function
+from eofs.examples import example_data_path
+import matplotlib.pyplot as plt
+
+index = PDO_index(example_data_path('sst_ndjfm_anom.nc'))
+
+fig, axs = plt.subplots()
+axs.plot(index, line= "black")
 
