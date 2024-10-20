@@ -28,13 +28,13 @@ def PDO_index(ssts):
 
     file = example_data_path('sst_ndjfm_anom.nc')  #test data
     data = xr.open_dataset(file)['sst']
-    print(data)
 
     #weight the data based on grid cell area by taking the square root of the cosine of latitude
     #store weightings in a numpy array
     #weights = np.sqrt(np.cos(np.deg2rad(anom["lat"].values)))
 
-    ex_weights = np.sqrt(np.cos(np.deg2rad(data["latitude"])))
+    #empty_array = np.ones((data["latitude"].size, data['longitude'].size))
+    ex_weights = np.sqrt(np.cos(np.deg2rad(data.coords["latitude"].values)))[:, np.newaxis]
 
     #create and EOF solver object in eofs class
     calc_eof = Eof(data, weights = ex_weights)
@@ -52,5 +52,6 @@ import matplotlib.pyplot as plt
 index = PDO_index(example_data_path('sst_ndjfm_anom.nc'))
 
 fig, axs = plt.subplots()
-axs.plot(index, line= "black")
+axs.plot(index[:, 0], color = "black")
 
+fig.savefig("index.png")
