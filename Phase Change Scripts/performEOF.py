@@ -9,7 +9,8 @@ def PDO_index(ssts):
     of the SST data.  The resulting first principle component is the PDO index.
 
     :Authors: Lucas Jones in collaboration with Brianna DeFore, Daniel Fenske, Roy Galang
-
+    :Params: ssts- an Xarray data set of raw SSTs over the 110E to 100W and 20N to 70N region 
+    defining the PDO. 
 
     Dawson A. eofs: A Library for EOF Analysis of Meteorological, Oceanographic, and Climate Data. 
     *Journal of Open Research Software*. 2016;4(1):e14. doi:10.5334/jors.122
@@ -20,8 +21,8 @@ def PDO_index(ssts):
     from eofs.examples import example_data_path  #for testing purposes
     import numpy as np
 
-    #take the time mean and hold it in a data set 
-    #timeAvg = ssts.mean(dim = "time")
+    #take the time mean for each month and hold it in a data set 
+    #timeAvg = ssts.groupby(months).mean(dim = "time")
 
     #use the time mean and original data to calulate an anomaly dataset
     #anom = ssts - timeAvg
@@ -31,16 +32,15 @@ def PDO_index(ssts):
 
     #weight the data based on grid cell area by taking the square root of the cosine of latitude
     #store weightings in a numpy array
-    #weights = np.sqrt(np.cos(np.deg2rad(anom["lat"].values)))
+    #weights = np.sqrt(np.cos(np.deg2rad(anom["lat"].values)))[:, np.newaxis]
 
-    #empty_array = np.ones((data["latitude"].size, data['longitude'].size))
     ex_weights = np.sqrt(np.cos(np.deg2rad(data.coords["latitude"].values)))[:, np.newaxis]
 
     #create and EOF solver object in eofs class
     calc_eof = Eof(data, weights = ex_weights)
 
     #get the 1st principle component (PC1)
-    pc1 = calc_eof.pcs(pcscaling = 1, npcs = 1)
+    pc1 = calc_eof.pcs(npcs = 1, pcscaling = 1)
 
     #output PC1
     return pc1
@@ -51,7 +51,11 @@ import matplotlib.pyplot as plt
 
 index = PDO_index(example_data_path('sst_ndjfm_anom.nc'))
 
-fig, axs = plt.subplots()
-axs.plot(index[:, 0], color = "black")
-
-fig.savefig("index.png")
+plt.figure()
+index[:, 0].plot(color = "blue")
+ax = plt.gca()
+ax.axhline(0, color = "black")
+ax.set_xlabel("Years")
+ax.set_ylabel("Normalized Units")
+ax.set_title("PC1: The Index Timeseries")
+plt.savefig("index.png")
