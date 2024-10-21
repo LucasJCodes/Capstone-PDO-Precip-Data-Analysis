@@ -8,9 +8,15 @@ def PDO_index(ssts):
     eofs package [Dawson 2016] to calculate the  empirical orthogonal function (EOF) 
     of the SST data.  The resulting first principle component is the PDO index.
 
-    :Authors: Lucas Jones in collaboration with Brianna DeFore, Daniel Fenske, Roy Galang
-    :Params: ssts- an Xarray data set of raw SSTs over the 110E to 100W and 20N to 70N region 
-    defining the PDO. 
+    Authors: 
+        Lucas Jones in collaboration with Brianna DeFore, Daniel Fenske, Roy Galang
+
+    Args:
+        ssts (dataset): an xarray data set of raw SSTs over the 110E to 100W and 20N to 70N region 
+              defining the PDO. 
+
+    Returns:
+        pc1 (dataset): An xarray data set holding the first principle component of the inputted SSTs
 
     Dawson A. eofs: A Library for EOF Analysis of Meteorological, Oceanographic, and Climate Data. 
     *Journal of Open Research Software*. 2016;4(1):e14. doi:10.5334/jors.122
