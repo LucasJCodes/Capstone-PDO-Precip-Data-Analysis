@@ -10,14 +10,14 @@ data, combine it, and then subset it over the given latitude and longitude bound
 Authors: 
         Lucas Jones in collaboration with Brianna DeFore, Daniel Fenske, Roy Galang
 
-    Args:
+Args:
         filenames: an string holding the path and name(s) of a file(s) holding the raw data.
         s_bound: The southern bound to subset the data over in degrees latitude.
         n_bound: The northern bound to subset the data over in degrees latitude.
         e_bound: The eastern bound to subset the data over in degrees latitude.
         w_bound: The western bound to subset the data over in degrees latitude.
 
-    Returns:
+Returns:
         data: An xarray data set holding the combined and subsetted data.
 '''
 def latlon_subset(filenames, s_bound, n_bound, e_bound, w_bound):
