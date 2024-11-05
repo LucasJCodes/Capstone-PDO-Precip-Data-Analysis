@@ -8,12 +8,13 @@ import xarray as xr
 def ID_Phase(PDOindex, period, bound):
     
     PDOindex['Date'] = pd.to_datetime(PDOindex[['Year', 'Month']].assign(Day=1))
+    PDOindex['Phase Change'] = 0
 
     index = PDOindex["Value"]
 
     Neutral = False
     NeutralDates = []
-    PhaseChange = []
+
 
     for i in range(0, len(PDOindex)-period):
         SUM = 0
@@ -25,16 +26,9 @@ def ID_Phase(PDOindex, period, bound):
 
         if ((Average >= -bound) and (Average <= bound)):
             Neutral = True
-            NeutralDates.append(PDOindex['Date'][i])
-            PhaseChange.append('1')
-
-        else:
-            PhaseChange.append('0')
-    
-    for i in range(0, period):
-        PhaseChange.append('0')
-    
-    PDOindex['Phase Change'] = PhaseChange
+            CentralMonth = i + period // 2
+            NeutralDates.append(PDOindex['Date'][CentralMonth])
+            PDOindex.at[CentralMonth, 'Phase Change'] = 1
 
     #print(PDOindex)
 
@@ -49,9 +43,11 @@ def ID_Phase(PDOindex, period, bound):
     plt.fill_between(PDOindex['Date'], PDOindex['Value'], 4, where=(PDOindex['Value'] <= bound), color='lightblue', alpha=0.3, step='mid')
     #plt.show()
 
-    plt.figure(figsize=(15,4))
-    plt.step(PDOindex['Date'], PDOindex['Phase Change'])
-    plt.ylim(0,2)
+    fig2,ax2 = plt.subplots(figsize=(15,4))
+    ax2.step(PDOindex['Date'], PDOindex['Phase Change'])
+    ax2.set_ylim(0,2)
+    ax2.set_yticks([0,1,2])
+
     plt.show()
 
     return NeutralDates
