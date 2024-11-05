@@ -24,22 +24,24 @@ def latlon_subset(filenames, s_bound, n_bound, e_bound, w_bound):
 
     data_in = xr.open_mfdataset(filenames)
 
-    lat_parse = data_in.sel(nlat = slice(s_bound, n_bound))
+    lat_parse = data_in.sel(lat = slice(s_bound, n_bound))
 
-    data = lat_parse.sel(nlon = slice(e_bound, w_bound))
+    data = lat_parse.sel(lon = slice(e_bound, w_bound))
 
     return data
 
 ########## End of Function, main method calling function for SST data ########################
 
 #path in your file system to the data
-path = "your/path/to/raw/data"
+path = "\\Users\\17135\\Capstone Code\\Capstone-PDO-Precip-Data-Analysis\\"
 
 #iterate through each ensemble member set of files
 for i in range(11, 21):
 
     #generate the file names corresponding to a given member across all years
     files = path + "b.e21.B*smbb.f09_g17.LE2-1301.0" + str(i) + ".cam.h0.SST.*.nc"
+
+    print("here" + files)
 
     data = latlon_subset(files, 20, 70, 110, 260)
 
