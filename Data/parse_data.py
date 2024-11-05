@@ -33,17 +33,17 @@ def latlon_subset(filenames, s_bound, n_bound, e_bound, w_bound):
 ########## End of Function, main method calling function for SST data ########################
 
 #path in your file system to the data
-path = "\\Users\\17135\\Capstone Code\\Capstone-PDO-Precip-Data-Analysis\\"
+path = "\\Users\\17135\\Capstone Code\\Capstone-PDO-Precip-Data-Analysis\\all PRECT files for subsetting\\"
 
 #iterate through each ensemble member set of files
 for i in range(11, 21):
 
     #generate the file names corresponding to a given member across all years
-    files = path + "b.e21.B*smbb.f09_g17.LE2-1301.0" + str(i) + ".cam.h0.SST.*.nc"
+    files = path + "b.e21.B*smbb.f09_g17.LE2-1301.0" + str(i) + ".cam.h0.PRECT.*.nc"
 
     print("here" + files)
 
-    data = latlon_subset(files, 20, 70, 110, 260)
+    data = latlon_subset(files, 25, 55, 100, 135)
 
     #save the subsetted data to the local folder as a file with the member name in it.
-    data["SST"].to_netcdf("SSTmem" + str(i) + ".nc")
+    data["PRECT"].to_netcdf("PRECTmem" + str(i) + ".nc")
