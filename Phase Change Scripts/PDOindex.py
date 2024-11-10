@@ -7,37 +7,41 @@ import xarray as xr
 
 def ID_Phase(PDOindex, period, bound):
     
-    PDOindex['Date'] = pd.to_datetime(PDOindex[['Year', 'Month']].assign(Day=1))
+    
+    #PDOindex['Date'] = pd.to_datetime(PDOindex[['Year', 'Month']].assign(Day=1))  #used for reading NOAA PDO index data
     PDOindex['Phase Change'] = 0
 
-    index = PDOindex["Value"]
+    #index = PDOindex["Value"]   #used for reading NOAA PDO index data
+
+    print(PDOindex)
 
     Neutral = False
     NeutralDates = []
-
 
     for i in range(0, len(PDOindex)-period):
         SUM = 0
 
         for j in range(0, period):
-            SUM = SUM + index[i+j]
+            SUM = SUM + PDOindex[i+j]  #or use "index" instead of PDOindex in the case of NOAA test data
         
         Average = SUM/period
 
         if ((Average >= -bound) and (Average <= bound)):
             Neutral = True
             CentralMonth = i + period // 2
-            NeutralDates.append(PDOindex['Date'][CentralMonth])
-            PDOindex.at[CentralMonth, 'Phase Change'] = 1
+            NeutralDates.append(PDOindex.time[CentralMonth])  #use PDOindex['date'] instead for NOAA data
+            PDOindex["Phase Change"]['CentralMonth'] = 1   #or "PDOindex.at[CentralMonth, 'Phase Change'] = 1" for NOAA test data
 
     #print(PDOindex)
+
+    print("here")
 
     print(len(NeutralDates))
 
     return NeutralDates
 
 ############## function end
-
+"""
 file = "NOAA_PDO_Index.csv"
 bound = 0.1
 mon_length = 72
@@ -61,3 +65,4 @@ ax2.set_ylim(0,2)
 ax2.set_yticks([0,1,2])
 
 plt.show()
+"""
