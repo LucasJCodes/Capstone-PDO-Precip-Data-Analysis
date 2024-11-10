@@ -19,11 +19,11 @@ for file in range(11, NUM_FILES + 11):
     temp_ds = xr.open_dataset("Data/SSTmem" + str(file) + ".nc", engine = "netcdf4")
     files.append(temp_ds)
 
-
 # The performEOF function has input (ssts) and output (pc1), an xarray dataset with the first principle component of inputted SSTs, or the PDO index.
 # iterate through each of the members to calculate the PDO index for each
 for file in files:
-    index_list.append(performEOF.PDO_index(file))
+    temp_index = performEOF.PDO_index(file)
+    index_list.append(temp_index.reset_coords("month", drop = True))
 
 # The ID_Phase function has inputs (data, period, bound) and output (neutral_dates), a list of months that have been identified as PDO neutral using the rolling average. 
 #data is PDO index values by month.
@@ -31,8 +31,7 @@ for file in files:
 
 # Iterate through each of the calculated indices for the different members and find the phase changes
 for member in index_list:
-    curr_index = member.to_dataframe()
-    phaseChanges.append(PDOindex.ID_Phase(curr_index, period = 36, bound = 0.5))
+    phaseChanges.append(PDOindex.ID_Phase(member, period = 72, bound = 0.1))
+    
 
-print("here")
 
