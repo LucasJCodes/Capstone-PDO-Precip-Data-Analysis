@@ -34,22 +34,6 @@ def ID_Phase(PDOindex, period, bound):
 
     print(len(NeutralDates))
 
-    PDOindex['Color'] = ['red' if value > bound else 'blue' if value < -bound else 'black' for value in PDOindex['Value']]
-
-
-    fig,ax = plt.subplots(figsize=(15,4))
-    ax.bar(PDOindex['Date'], PDOindex['Value'], width=45, color=PDOindex['Color'])
-    plt.fill_between(PDOindex['Date'], PDOindex['Value'], 4, where=(PDOindex['Value'] >= -bound), color='lightblue', alpha=0.3, step='mid')
-    plt.fill_between(PDOindex['Date'], PDOindex['Value'], 4, where=(PDOindex['Value'] <= bound), color='lightblue', alpha=0.3, step='mid')
-    #plt.show()
-
-    fig2,ax2 = plt.subplots(figsize=(15,4))
-    ax2.step(PDOindex['Date'], PDOindex['Phase Change'])
-    ax2.set_ylim(0,2)
-    ax2.set_yticks([0,1,2])
-
-    plt.show()
-
     return NeutralDates
 
 ############## function end
@@ -61,3 +45,17 @@ PDOindex = pd.DataFrame(NOAAdata)
 
 neutral = ID_Phase(PDOindex, 72, 0.1)
 #print(NOAAdata)
+
+PDOindex['Color'] = ['red' if value > 0.1 else 'blue' if value < -0.1 else 'black' for value in PDOindex['Value']]
+
+fig,ax = plt.subplots(figsize=(15,4))
+ax.bar(PDOindex['Date'], PDOindex['Value'], width=45, color=PDOindex['Color'])
+plt.fill_between(PDOindex['Date'], PDOindex['Value'], 4, where=(PDOindex['Value'] >= -0.1), color='lightblue', alpha=0.3, step='mid')
+plt.fill_between(PDOindex['Date'], PDOindex['Value'], 4, where=(PDOindex['Value'] <= 0.1), color='lightblue', alpha=0.3, step='mid')
+
+fig2,ax2 = plt.subplots(figsize=(15,4))
+ax2.step(PDOindex['Date'], PDOindex['Phase Change'])
+ax2.set_ylim(0,2)
+ax2.set_yticks([0,1,2])
+
+plt.show()
