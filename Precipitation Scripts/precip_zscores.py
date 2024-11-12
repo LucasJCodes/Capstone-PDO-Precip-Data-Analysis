@@ -2,9 +2,7 @@
 
 import xarray as xr
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-import cftime as cf
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
@@ -12,8 +10,7 @@ import cartopy.feature as cfeature
 def member_zscore(filepath):
     # Input will be the filepath to a netCDF of monthly precip data from one CESM2 member, which has dimensions of lat, lon, and time. Time component will be in months.
     
-    zscores = []
-
+    #zscores = []
     dataset = xr.open_dataset(filepath)
 
     #print(dataset["PRECT"])
@@ -25,9 +22,7 @@ def member_zscore(filepath):
     
     # Average and standard deviation for each month's precip (e.g. all Januarys)
     avgs = pcp.mean(dim = 'time')
-
     stds = pcp.std(dim = 'time')
-    #insanity = avgs.std(dim = 'time')
 
     # Z-scores calculation
     """
@@ -39,6 +34,7 @@ def member_zscore(filepath):
     """
     anom = pcp - avgs
     zscores = anom.groupby("time.month") / stds
+    #print(zscores)
     return zscores
 
 # Now, to check things are going ok, let's plot the zscores on a contour plot. Yay.
