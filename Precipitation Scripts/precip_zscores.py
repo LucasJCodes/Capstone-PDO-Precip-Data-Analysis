@@ -4,6 +4,8 @@ import xarray as xr
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import cftime as cf
+import cartopy.crs as ccrs
 
 # Step 1: Average precip for each month across each member's ~100 years of data.
 def member_zscore(filepath):
@@ -12,11 +14,11 @@ def member_zscore(filepath):
     dataset = xr.open_dataset(filepath)
 
     #print(dataset["PRECT"])
-
-    dataset = dataset['PRECT'] * 3600 * 24 * 30.417 * 1000
+    prect = dataset['PRECT']
+    prect = prect * 3600 * 24 * 30.417 * 1000
    
     # Precip data grouped by month
-    pcp = dataset.groupby('time.month')
+    pcp = prect.groupby('time.month')
 
     # Average and standard deviation for each month's precip (e.g. all Januarys)
     avgs = pcp.mean(dim = 'time')
@@ -24,22 +26,24 @@ def member_zscore(filepath):
 
     # Z-scores calculation
     zscores = (pcp - avgs) / stds
-
-    # Now, to check things are going ok, let's plot the zscores on a contour plot. Yay.
-
     return zscores
-    
+
+# Now, to check things are going ok, let's plot the zscores on a contour plot. Yay.
+
 data = member_zscore('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem11.nc')
 
+# Turn cftime dates into something I can deal with.
+data['time'] = data['time'].dt.strftime('%Y%m%d')
 
-print(data.time)
-data.time.dt.strftime("%Y-%m-%d %H:%M:%S")
-data = data.where(data.time.dt.strftime("%Y-%m-%d %H:%M:%S").year == 1950, drop = True)
-# print(data)
-print(data.time.shape)
+# Take the 4D array down to 2D for a specific month and time.
+test = data.where((data['time'] == '19500201') & (data.month == 2), drop = True)
+test = test.squeeze(('month', 'time'), drop = True)
 
-
-# print(data_slice)
-
-# plt.contourf(data.lat, data.lon, data_slice)
-# plt.show()
+# Plot a contour of zscores for the specific day/month.
+#print(test)
+X, Y = np.meshgrid(test.lon, test.lat)
+fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw= {'projection': ccrs.PlateCarree()})
+ax.contourf(X, Y, test, transform = ccrs.PlateCarree())
+#ax.get_xticklabels
+ax.coastlines()
+plt.show()
