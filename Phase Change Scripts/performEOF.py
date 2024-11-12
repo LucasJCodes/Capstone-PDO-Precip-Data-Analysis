@@ -26,22 +26,27 @@ def PDO_index(ssts):
     from eofs.xarray import Eof
     import numpy as np
 
+    #remove the trend  of the data to exclude any possible changes due to climate change
+    regress = ssts.polyfit(dim = "time", deg = 1)  #calculate regression
+
+    fit = xr.polyval(ssts["time"], regress.SST_polyfit_coefficients)
+
+    detrended = ssts - fit
+
     #take the time mean for each month and hold it in a data set 
-    monthly_clim = ssts.groupby("time.month").mean(dim = "time")
+    monthly_clim = detrended.groupby("time.month").mean(dim = "time")
 
     #use the time mean and original data to calulate the anomaly for each month
-    anoms = (ssts.groupby("time.month") - monthly_clim).to_dataarray()
-
-    print(anoms)
+    month_anoms = (detrended.groupby("time.month") - monthly_clim).to_dataarray()
 
     #weight the data based on grid cell area by taking the square root of the cosine of latitude
     #store weightings in a numpy array
-    weights = np.sqrt(np.cos(np.deg2rad(anoms["lat"].values)))[:, np.newaxis]
+    weights = np.sqrt(np.cos(np.deg2rad(month_anoms["lat"].values)))[:, np.newaxis]
 
     ex_weights = np.sqrt(np.cos(np.deg2rad(data.coords["lat"].values)))[:, np.newaxis]
 
     #create and EOF solver object in eofs class
-    calc_eof = Eof(anoms[0], weights = ex_weights)
+    calc_eof = Eof(month_anoms[0], weights = ex_weights)
 
     #get the 1st principle component (PC1)
     pc1 = calc_eof.pcs(npcs = 1, pcscaling = 1)
@@ -61,7 +66,10 @@ plt.figure()
 index[:, 0].plot(color = "blue")
 ax = plt.gca()
 ax.axhline(0, color = "black")
+
 ax.set_xlabel("Years")
 ax.set_ylabel("Normalized Units")
+
+ax.set_ylim(-4, 4)
 ax.set_title("PC1: The Index Timeseries")
 plt.savefig("index.png")
