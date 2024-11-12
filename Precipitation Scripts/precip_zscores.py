@@ -32,7 +32,7 @@ def member_zscore(filepath):
 
 data = member_zscore('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem11.nc')
 
-# Turn cftime dates into something I can deal with.
+# Turn cftime dates into something I can deal with.ikl;
 data['time'] = data['time'].dt.strftime('%Y%m%d')
 
 # Take the 4D array down to 2D for a specific month and time.
@@ -42,8 +42,7 @@ test = test.squeeze(('month', 'time'), drop = True)
 # Plot a contour of zscores for the specific day/month.
 #print(test)
 X, Y = np.meshgrid(test.lon, test.lat)
-fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw= {'projection': ccrs.PlateCarree()})
-ax.contourf(X, Y, test, transform = ccrs.PlateCarree())
-#ax.get_xticklabels
+fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
 ax.coastlines()
+ax.contourf(X, Y, test, transform = ccrs.PlateCarree())
 plt.show()
