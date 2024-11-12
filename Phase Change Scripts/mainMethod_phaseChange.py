@@ -33,5 +33,6 @@ for file in files:
 for member in index_list:
     phaseChanges.append(PDOindex.ID_Phase(member, period = 72, bound = 0.1))
     
-
+#write all the data to a file
+#changes = xr.dataset(data_vals = dict(months = ("months", phaseChanges)))
 
