@@ -13,10 +13,9 @@ def ID_Phase(PDOindex, period, bound):
 
     #index = PDOindex["Value"]   #used for reading NOAA PDO index data
 
-    print(PDOindex)
-
     Neutral = False
-    NeutralDates = []
+    NeutralDates = np.full((len(PDOindex) - period, 1), np.NaN)
+    NeutralDates = NeutralDates.astype(object)
 
     for i in range(0, len(PDOindex)-period):
         SUM = 0
@@ -29,12 +28,10 @@ def ID_Phase(PDOindex, period, bound):
         if ((Average >= -bound) and (Average <= bound)):
             Neutral = True
             CentralMonth = i + period // 2
-            NeutralDates.append(PDOindex.time[CentralMonth])  #use PDOindex['date'] instead for NOAA data
+            NeutralDates[i] = ((PDOindex.time[CentralMonth].values).item())  #use PDOindex['date'] instead for NOAA data
             PDOindex["Phase Change"]['CentralMonth'] = 1   #or "PDOindex.at[CentralMonth, 'Phase Change'] = 1" for NOAA test data
 
     #print(PDOindex)
-
-    print("here")
 
     print(len(NeutralDates))
 
