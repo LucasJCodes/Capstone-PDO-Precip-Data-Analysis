@@ -33,7 +33,7 @@ ax.coastlines()
 
 my_ax = ax.contourf(X, Y, test, transform = ccrs.PlateCarree(), cmap = 'YlGn')
 ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-ax.set_title('Average Annual Precipitation (mm/month)')
+ax.set_title('Average Annual Precipitation (mm)')
 
 fig.colorbar(my_ax, ax = ax)
 #plt.show()
