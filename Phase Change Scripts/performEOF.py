@@ -43,10 +43,8 @@ def PDO_index(ssts):
     #store weightings in a numpy array
     weights = np.sqrt(np.cos(np.deg2rad(month_anoms["lat"].values)))[:, np.newaxis]
 
-    ex_weights = np.sqrt(np.cos(np.deg2rad(data.coords["lat"].values)))[:, np.newaxis]
-
     #create and EOF solver object in eofs class
-    calc_eof = Eof(month_anoms[0], weights = ex_weights)
+    calc_eof = Eof(month_anoms[0], weights = weights)
 
     #get the 1st principle component (PC1)
     pc1 = calc_eof.pcs(npcs = 1, pcscaling = 1)
@@ -54,14 +52,18 @@ def PDO_index(ssts):
     #output PC1
     return pc1
 
+
+
 #testing of the function
 import xarray as xr
 import matplotlib.pyplot as plt
+from PDOindex import ID_Phase
 
-data = xr.open_dataset("Data/SSTmem11.nc")
+data = xr.open_dataset("Data/SSTmem15.nc")
 
 index = PDO_index(data)
 
+"""
 plt.figure()
 index[:, 0].plot(color = "blue")
 ax = plt.gca()
@@ -72,4 +74,26 @@ ax.set_ylabel("Normalized Units")
 
 ax.set_ylim(-4, 4)
 ax.set_title("PC1: The Index Timeseries")
+"""
+
+bound = 0.1
+mon_length = 72
+
+neutral = ID_Phase(index, mon_length, bound)
+
+index = index.to_dataset()
+dates = index["time"].to_index().to_datetimeindex()
+
+print(dates)
+
+index['Color'] = ['red' if pcs > bound else 'blue' if pcs < -bound else 'black' for pcs in index["pcs"]]
+
+fig,ax = plt.subplots(figsize=(15,4))
+ax.bar(dates, index['pcs'], width=45) #color = index['Color'])
+
+fig2,ax2 = plt.subplots(figsize=(15,4))
+ax2.step(index['Date'], index['Phase Change'])
+ax2.set_ylim(0,2)
+ax2.set_yticks([0,1,2])
+
 plt.savefig("index.png")
