@@ -25,7 +25,8 @@ def pcp_total(filepath):
     # Average precipitation for THAT MONTH
     pcp = pcp.mean(dim = 'time')
     # Interval we want
-    interval = pcp.where((pcp.month.isin([1,2,3])), drop = True)
+    #CHANGE THIS LINE DEPENDING ON INTERVAL
+    interval = pcp.where((pcp.month.isin([6,7,8])), drop = True)
     return interval
 
 #Read in the data
@@ -43,7 +44,9 @@ ax.coastlines()
 #Adds data and other components
 my_ax = ax.contourf(X, Y, data, transform = ccrs.PlateCarree(), cmap = "YlGn")
 ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-ax.set_title('Total precipitation using respective averages of Jan-Mar (mm/month)')
+#CHANGE THIS LINE DEPENDING ON INTERVAL
+ax.set_title('Total precipitation using respective averages of Jun-Aug (mm/month)')
 fig.colorbar(my_ax, ax = ax)
 #save figure
-plt.savefig('JantoMar_SumOfAvgs.png')
+#CHANGE THIS LINE DEPENDING ON INTERVAL
+plt.savefig('JuntoAug_SumOfAvgs.png')
