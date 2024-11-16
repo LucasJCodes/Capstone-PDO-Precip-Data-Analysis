@@ -83,13 +83,24 @@ neutral = ID_Phase(index, mon_length, bound)
 
 index = index.to_dataset()
 dates = index["time"].to_index().to_datetimeindex()
+squeezed = index.squeeze(dim = "mode")
 
-print(dates)
+print(squeezed)
 
-index['Color'] = ['red' if pcs > bound else 'blue' if pcs < -bound else 'black' for pcs in index["pcs"]]
+#dates = dates[:len(index["pcs"])]
+
+data = squeezed["pcs"].to_dataframe()
+
+print(data)
+
+"""
+index['Color'] = xr.DataArray(
+    ['red' if pcs > bound else 'blue' if pcs < -bound else 'black' for pcs in index["pcs"]],
+    dims = index["pcs"].dims, coords = index["pcs"].coords)
+"""
 
 fig,ax = plt.subplots(figsize=(15,4))
-ax.bar(dates, index['pcs'], width=45) #color = index['Color'])
+ax.bar(data.index, data["pcs"]) #color = index['Color'])
 
 fig2,ax2 = plt.subplots(figsize=(15,4))
 ax2.step(index['Date'], index['Phase Change'])
