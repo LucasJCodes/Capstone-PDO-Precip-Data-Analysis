@@ -1,6 +1,5 @@
-'''
-In this code, the total precipitation of the averages for certain months (January to March vs June to August) from a single member is calculated.
-'''
+#In this code, the total precipitation of the averages for certain months (January to March vs June to August) from a single member is calculated.
+
 
 import xarray as xr
 import numpy as np
@@ -9,7 +8,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
 #Convert data into mm/month
-def pcp_total(filepath):
+def pcp_total(filepath, months):
     # Input will be the filepath to a netCDF of monthly precip data from one CESM2 member, which has dimensions of lat, lon, and time. Time component will be in months.
     
     dataset = xr.open_dataset(filepath, engine="netcdf4")
@@ -26,11 +25,11 @@ def pcp_total(filepath):
     pcp = pcp.mean(dim = 'time')
     # Interval we want
     #CHANGE THIS LINE DEPENDING ON INTERVAL
-    interval = pcp.where((pcp.month.isin([6,7,8])), drop = True)
+    interval = pcp.where((pcp.month.isin(months)), drop = True)
     return interval
 
 #Read in the data
-data = pcp_total('C:/Users/17135/Capstone Code/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem11.nc')
+data = pcp_total('C:/Users/17135/Capstone Code/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem11.nc', [6,7,8])
 
 #Sum together the averages
 data = data.sum(dim = 'month')
@@ -49,4 +48,5 @@ ax.set_title('Total precipitation using respective averages of Jun-Aug (mm/month
 fig.colorbar(my_ax, ax = ax)
 #save figure
 #CHANGE THIS LINE DEPENDING ON INTERVAL
-plt.savefig('JuntoAug_SumOfAvgs.png')
+plt.show()
+#plt.savefig('JuntoAug_SumOfAvgs.png')
