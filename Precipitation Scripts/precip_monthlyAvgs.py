@@ -23,21 +23,18 @@ def pcp_monthlyAvg(filepath):
     # Average for each month's precip (e.g. all Januarys)
     mem_sum = pcp.mean(dim = ['member', 'time'])
     avg = mem_sum.sum(dim = 'month')
-    #avg = mem_sum.mean(dim = 'month')
-
-    #annual_sum = pcp.sum(dim = 'member').groupby('time.month')
-    #annual_avg = annual_sum.mean(dim = 'month')
     return avg
 
 test = pcp_monthlyAvg(filepath = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc')
 
-# tot = test.where(test.month == 8, drop = True)
-# tot = jun.squeeze(('month'), drop = True)
-
 X, Y = np.meshgrid(test.lon, test.lat)
 fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
 ax.coastlines()
-my_ax = ax.contourf(X, Y, test, transform = ccrs.PlateCarree())
+
+my_ax = ax.contourf(X, Y, test, transform = ccrs.PlateCarree(), cmap = 'YlGn')
 ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
+ax.set_title('Average Annual Precipitation (mm/month)')
+
 fig.colorbar(my_ax, ax = ax)
+#plt.show()
 plt.savefig('avgAnnual_allMembers.png')
