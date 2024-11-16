@@ -25,13 +25,6 @@ def member_zscore(filepath):
     stds = pcp.std(dim = 'time')
 
     # Z-scores calculation
-    """
-    for month in range(1, 12):
-        zscores.append((pcp[month] - avgs[month]) / stds[month])
-
-        print("max", zscores[month - 1].max())
-        print("min", zscores[month - 1].min())
-    """
     anom = pcp - avgs
     zscores = anom.groupby("time.month") / stds
     #print(zscores)
