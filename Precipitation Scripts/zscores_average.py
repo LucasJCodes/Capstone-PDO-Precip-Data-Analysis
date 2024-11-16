@@ -3,10 +3,12 @@
 import xarray as xr
 import numpy as np
 
-def phaseMask(zscores, pc_months):
+def phaseMask(filepaths, pc_months):
     # Zscores is the zscores dataset and pc_months is the list of phase change months.
 
+    zscores = xr.open_mfdataset(filepaths)
     phaseChange_zs = zscores.where(zscores['time.month'].isin(pc_months), drop=True)
 
     # Calculate the average zscores for each month at each gridpoint during phase changes.
     avg_zs = phaseChange_zs.groupby('time.month').mean('time')
+

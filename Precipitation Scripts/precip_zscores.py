@@ -45,7 +45,7 @@ data = member_zscore('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Prec
 data['time'] = data['time'].dt.strftime('%Y%m%d')
 
 # Take the 4D array down to 2D for a specific month and time.
-test = data.where((data['time'] == '19631201') & (data.month == 12), drop = True)
+test = data.where((data['time'] == '19840501') & (data.month == 5), drop = True)
 test = test.squeeze(('time'), drop = True)
 
 # Plot a contour of zscores for the specific day/month.
