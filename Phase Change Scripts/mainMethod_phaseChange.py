@@ -15,24 +15,34 @@ index_list = []
 phaseChanges = []
 
 #read in all the files using a for loop to add them to the files list
-for file in range(11, NUM_FILES + 11):
-    temp_ds = xr.open_dataset("Data/SSTmem" + str(file) + ".nc", engine = "netcdf4")
-    files.append(temp_ds)
+for i in range(11, NUM_FILES + 11):
+    temp_ds = xr.open_dataset("Data/SSTmem" + str(i) + ".nc", engine = "netcdf4")
 
-# The performEOF function has input (ssts) and output (pc1), an xarray dataset with the first principle component of inputted SSTs, or the PDO index.
-# iterate through each of the members to calculate the PDO index for each
-for file in files:
-    temp_index = performEOF.PDO_index(file)
-    index_list.append(temp_index.reset_coords("month", drop = True))
+    # The performEOF function has input (ssts) and output (pc1), an xarray dataset with the first principle component of inputted SSTs, or the PDO index.
+    # iterate through each of the members to calculate the PDO index for each
+    temp_index = performEOF.PDO_index(temp_ds).reset_coords("month", drop = True)
 
-# The ID_Phase function has inputs (data, period, bound) and output (neutral_dates), a list of months that have been identified as PDO neutral using the rolling average. 
-#data is PDO index values by month.
-#We want the output of performEOF, pc1, to be the data input for ID_phase. So we have to convert pc1 to a Pandas dataframe.
+    # The ID_Phase function has inputs (data, period, bound) and output (neutral_dates), a list of months that have been identified as PDO neutral using the rolling average. 
+    #data is PDO index values by month.
+    #We want the output of performEOF, pc1, to be the data input for ID_phase. So we have to convert pc1 to a Pandas dataframe.
 
-# Iterate through each of the calculated indices for the different members and find the phase changes
-for member in index_list:
-    phaseChanges.append(PDOindex.ID_Phase(member, period = 72, bound = 0.1))
+    # Iterate through each of the calculated indices for the different members and find the phase changes
+    phaseChanges.append(PDOindex.ID_Phase(temp_index, period = 72, bound = 0.1))
     
 #write all the data to a file
-#changes = xr.dataset(data_vals = dict(months = ("months", phaseChanges)))
+"""
+dataset1 = xr.open_dataset("Data/SSTmem11.nc")
+index = performEOF.PDO_index(dataset1).reset_coords("month", drop = True)
+changes = PDOindex.ID_Phase(index, period = 72, bound = 0.1)
+"""
 
+data_array = xr.DataArray(
+    phaseChanges,
+    dims=["member", "months"],
+    name="dates"
+)
+
+final = data_array.to_dataset()
+
+
+print(final)
