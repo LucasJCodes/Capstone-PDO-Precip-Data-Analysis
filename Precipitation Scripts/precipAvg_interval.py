@@ -1,3 +1,10 @@
+'''
+This combines our previous codes, "totalprecip_interval.py" and "precip_monthlyAvgs.py", to provide a streamlined process to create plots for one of two scenarios:
+    1. An interval of months
+    2. Annual
+Both take the sum of the average precipitation for the months used, and take in all 10 members.
+'''
+
 import xarray as xr
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -45,8 +52,10 @@ def prettyColors(data, title, cmap):
     #CHANGE THIS LINE DEPENDING ON INTERVAL
     plt.show()
 
+#Monthly interval
 roy = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = [6, 7, 8])
 prettyColors(data = roy, title = 'Average Summertime Precipitation (mm)', cmap = 'YlGn')
 
+#Annual interval
 daniel = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
 prettyColors(data = daniel, title = 'Average Annual Precipitation (mm)', cmap = 'YlGn')
