@@ -7,35 +7,35 @@ import xarray as xr
 
 def ID_Phase(PDOindex, period, bound):
     
-    
-    #PDOindex['Date'] = pd.to_datetime(PDOindex[['Year', 'Month']].assign(Day=1))  #used for reading NOAA PDO index data
     PDOindex['Phase Change'] = 0
 
-    #index = PDOindex["Value"]   #used for reading NOAA PDO index data
-
-    Neutral = False
+    """
     NeutralDates = np.full((len(PDOindex) - period, 1), np.NaN)
-    NeutralDates = NeutralDates.astype(object)
+    NeutralDates = NeutralDates.astype(datetime)
+    """
+
+    NeutralDates = []
+    phaseBool = []
 
     for i in range(0, len(PDOindex)-period):
         SUM = 0
 
         for j in range(0, period):
-            SUM = SUM + PDOindex[i+j]  #or use "index" instead of PDOindex in the case of NOAA test data
+            SUM = SUM + PDOindex[i+j]
         
         Average = SUM/period
 
         if ((Average >= -bound) and (Average <= bound)):
-            Neutral = True
             CentralMonth = i + period // 2
-            NeutralDates[i] = ((PDOindex.time[CentralMonth].values).item())  #use PDOindex['date'] instead for NOAA data
-            PDOindex["Phase Change"]['CentralMonth'] = 1   #or "PDOindex.at[CentralMonth, 'Phase Change'] = 1" for NOAA test data
+            NeutralDates.append((PDOindex.time[CentralMonth].values).item())
+            phaseBool.append(1)
 
-    #print(PDOindex)
+        else:
+            phaseBool.append(0)
 
     print(len(NeutralDates))
 
-    return NeutralDates
+    return phaseBool, NeutralDates
 
 ############## function end
 """
