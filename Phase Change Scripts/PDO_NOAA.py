@@ -12,7 +12,7 @@ def ID_Phase_NOAA(PDOindex, period, bound):
 
     index = PDOindex["Value"]
 
-    #Neutral = False
+    phaseBool = []
     NeutralDates = []
     PhaseChange = []
 
@@ -25,12 +25,27 @@ def ID_Phase_NOAA(PDOindex, period, bound):
         Average = SUM/period
 
         if ((Average >= -bound) and (Average <= bound)):
-            #Neutral = True
+
             central_month_index = i + period // 2
             NeutralDates.append(PDOindex['Date'][central_month_index])
             PDOindex.at[central_month_index, 'Phase Change'] = 1
+            phaseBool.append(1)
+
+        else: 
+            phaseBool.append(0)
 
     #print(PDOindex)
+
+    for i in range(0, len(phaseBool)):
+        Flag = False
+
+        for j in range(0,5):
+
+            if phaseBool[i+j] == 1:
+                Flag = True
+
+        if Flag == True:
+            phaseBool[i] = 1
 
     print(len(NeutralDates))
 
