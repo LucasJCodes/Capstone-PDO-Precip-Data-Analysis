@@ -33,6 +33,18 @@ def ID_Phase(PDOindex, period, bound):
         else:
             phaseBool.append(0)
 
+    for i in range(0, len(phaseBool)):
+        Flag = False
+
+        for j in range(0,5):
+
+            if phaseBool[i+j] == 1:
+                Flag = True
+
+        if Flag == True:
+            phaseBool[i] = 1
+
+
     print(len(NeutralDates))
 
     return phaseBool, NeutralDates
