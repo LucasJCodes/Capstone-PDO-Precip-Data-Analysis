@@ -14,6 +14,7 @@ files = []
 index_list = []
 phaseChanges = []
 
+
 #read in all the files using a for loop to add them to the files list
 for i in range(11, NUM_FILES + 11):
     temp_ds = xr.open_dataset("Data/SSTmem" + str(i) + ".nc", engine = "netcdf4")
@@ -27,22 +28,27 @@ for i in range(11, NUM_FILES + 11):
     #We want the output of performEOF, pc1, to be the data input for ID_phase. So we have to convert pc1 to a Pandas dataframe.
 
     # Iterate through each of the calculated indices for the different members and find the phase changes
-    phaseChanges.append(PDOindex.ID_Phase(temp_index, period = 72, bound = 0.1))
+    phaseChanges.append(PDOindex.ID_Phase(temp_index, period = 72, bound = 0.1)[0])
     
 #write all the data to a file
 """
 dataset1 = xr.open_dataset("Data/SSTmem11.nc")
 index = performEOF.PDO_index(dataset1).reset_coords("month", drop = True)
-changes = PDOindex.ID_Phase(index, period = 72, bound = 0.1)
+changes = PDOindex.ID_Phase(index, period = 72, bound = 0.1)[0]
 """
+
+print(phaseChanges)
 
 data_array = xr.DataArray(
     phaseChanges,
-    dims=["member", "months"],
-    name="dates"
+    dims=["members", "month_bool"],
+    name="is_phase_change"
 )
 
 final = data_array.to_dataset()
 
-
 print(final)
+
+#final["members"] = final["members"].to_datetimeindex()
+
+final.to_netcdf("/Users/lucas/source/repos/Capstone-PDO-Precip-Data-Analysis/Data/phaseChanges.nc")
