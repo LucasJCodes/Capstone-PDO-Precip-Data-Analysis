@@ -55,13 +55,14 @@ def PDO_index(ssts):
 
 
 #testing of the function
+import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
 from PDOindex import ID_Phase
 
-data = xr.open_dataset("Data/SSTmem15.nc")
+data_in = xr.open_dataset("Data/SSTmem15.nc")
 
-index = PDO_index(data)
+index = PDO_index(data_in)
 
 """
 plt.figure()
@@ -82,16 +83,22 @@ mon_length = 72
 neutral = ID_Phase(index, mon_length, bound)
 
 index = index.to_dataset()
-dates = index["time"].to_index().to_datetimeindex()
+#dates = index["time"].to_index().to_datetimeindex()
 squeezed = index.squeeze(dim = "mode")
+#index = index.to_dataframe()
 
-print(squeezed)
+#print(squeezed)
 
 #dates = dates[:len(index["pcs"])]
 
+#Since the plot wants to use datetime formats, we need to convert cftime into datetime formats, done through saving the dataset as a DataFrame and using a Pandas command
 data = squeezed["pcs"].to_dataframe()
+data['time'] = data.index
+data.reset_index(drop = True, inplace = True)
 
-print(data)
+data['time'] = pd.to_datetime([f"{date.year}-{date.month:02d}-{date.day:02d}" for date in data['time']])
+
+print("aaaaaaaaaaa")
 
 """
 index['Color'] = xr.DataArray(
@@ -100,11 +107,11 @@ index['Color'] = xr.DataArray(
 """
 
 fig,ax = plt.subplots(figsize=(15,4))
-ax.bar(data.index, data["pcs"]) #color = index['Color'])
+ax.bar(data['time'].values.reshape(1260), index["pcs"].values.reshape(1260), width=1260) #color = index['Color'])
 
 fig2,ax2 = plt.subplots(figsize=(15,4))
-ax2.step(index['Date'], index['Phase Change'])
+ax2.step(data['time'], neutral[0])
 ax2.set_ylim(0,2)
 ax2.set_yticks([0,1,2])
 
-plt.savefig("index.png")
+plt.show()
