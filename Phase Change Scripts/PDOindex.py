@@ -35,7 +35,7 @@ def ID_Phase(PDOindex, period, bound):
         else:
             phaseBool.append(0)
 
-    for i in range(0, len(phaseBool)):
+    for i in range(0, len(phaseBool) - 6):
         Flag = False
 
         for j in range(0,5):
