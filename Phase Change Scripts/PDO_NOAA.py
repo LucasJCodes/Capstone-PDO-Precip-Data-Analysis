@@ -12,9 +12,12 @@ def ID_Phase_NOAA(PDOindex, period, bound):
 
     index = PDOindex["Value"]
 
+    #fill the half of a period length with zeros so it accounts for a centered mean
     phaseBool = []
     NeutralDates = []
-    PhaseChange = []
+
+    for i in range(0, int(period/2)):
+        phaseBool.append(0)
 
     for i in range(0, len(PDOindex)-period):
         SUM = 0
@@ -34,9 +37,12 @@ def ID_Phase_NOAA(PDOindex, period, bound):
         else: 
             phaseBool.append(0)
 
+    for i in range(0, int(period/2)):
+        phaseBool.append(0)
+
     #print(PDOindex)
 
-    for i in range(0, len(phaseBool)):
+    for i in range(0, len(phaseBool)-6):
         Flag = False
 
         for j in range(0,5):
@@ -47,6 +53,9 @@ def ID_Phase_NOAA(PDOindex, period, bound):
         if Flag == True:
             phaseBool[i] = 1
 
+    #add zeros of length half of the period to the end to account for the centered rolling mean
+    #phaseBool.append(np.zeros(int((period / 2))))
+    
     print(len(NeutralDates))
 
     PDOindex['Color'] = ['red' if value > bound else 'blue' if value < -bound else 'black' for value in PDOindex['Value']]
