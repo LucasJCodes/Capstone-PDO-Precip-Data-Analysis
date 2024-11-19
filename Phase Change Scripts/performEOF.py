@@ -93,11 +93,11 @@ data = squeezed["pcs"].to_dataframe()
 
 print(data)
 
-
+"""
 index['Color'] = xr.DataArray(
     ['red' if pcs > bound else 'blue' if pcs < -bound else 'black' for pcs in index["pcs"]],
     dims = index["pcs"].dims, coords = index["pcs"].coords)
-
+"""
 
 fig,ax = plt.subplots(figsize=(15,4))
 ax.bar(data.index, data["pcs"]) #color = index['Color'])
