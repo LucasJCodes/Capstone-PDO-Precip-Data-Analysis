@@ -17,7 +17,7 @@ def ID_Phase(PDOindex, period, bound):
     NeutralDates = []
 
     #fill the half of a period length with zeros so it accounts for a centered mean
-    phaseBool = np.zeros(period / 2)  
+    phaseBool = [0 * 36]
 
     for i in range(0, len(PDOindex)-period):
         SUM = 0
@@ -47,7 +47,8 @@ def ID_Phase(PDOindex, period, bound):
             phaseBool[i] = 1
 
     #add zeros of length half of the period to the end to account for the centered rolling mean
-    phaseBool.append(np.zeros(period / 2))  
+    for i in range(0, 36):
+        phaseBool.append(0) 
 
     print(len(NeutralDates))
 
