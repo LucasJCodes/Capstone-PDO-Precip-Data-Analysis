@@ -8,13 +8,11 @@ import xarray as xr
 def ID_Phase(PDOindex, period, bound):
     
     NeutralDates = []
+    phaseBool = []
 
-    #add zeros of length half of the period to the end to account for the centered rolling mean
+    #add zeros of length half of the period to the beginning to account for the centered rolling mean
     for i in range(0, 36):
         phaseBool.append(0) 
-
-    #fill the half of a period length with zeros so it accounts for a centered mean
-    phaseBool = [0 * 36]
 
     for i in range(0, len(PDOindex)-period):
         SUM = 0
@@ -35,13 +33,14 @@ def ID_Phase(PDOindex, period, bound):
     for i in range(0, len(phaseBool) - 6):
         Flag = False
 
-        for j in range(0,5):
+        if (phaseBool[i] == 1):
+            for j in range(0,5):
 
-            if phaseBool[i+j] == 1:
-                Flag = True
+                if phaseBool[i+j] == 1:
+                    Flag = True
 
         if Flag == True:
-            phaseBool[i] = 1
+            phaseBool[i + 1] = 1
 
     #add zeros of length half of the period to the end to account for the centered rolling mean
     for i in range(0, 36):
