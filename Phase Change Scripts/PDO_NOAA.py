@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from matplotlib.lines import Line2D
 import datetime
 import pandas as pd
 import xarray as xr
@@ -62,26 +63,32 @@ def ID_Phase_NOAA(PDOindex, period, bound, gap):
 
     PDOindex['Rolling Average'] = PDOindex['Value'].rolling(window=period, center=True).mean()
 
+    legend_elements = [
+        Line2D([0], [0], color='red', lw=4, label='Positive PDO'),
+        Line2D([0], [0], color='blue', lw=4, label='Negative PDO'),
+        Line2D([0], [0], color='black', lw=2, label=f'{period}-Month Rolling Average')]
+
     fig,ax = plt.subplots(figsize=(15,4))
     ax.bar(PDOindex['Date'], PDOindex['Value'], width=45, color=PDOindex['Color'])
     ax.plot(PDOindex['Date'], PDOindex['Rolling Average'], color='black', linewidth=2, label=f'{period}-Month Rolling Average')
     ax.set_xlabel("Date")
-    ax.set_xlabel("Date")
     ax.set_ylabel("PDO Index Value")
     ax.set_title("NOAA PDO Index")
-    ax.legend()
+    ax.legend(handles=legend_elements)
 
     fig2,ax2 = plt.subplots(figsize=(15,4))
     ax2.step(PDOindex['Date'], PDOindex['Phase Change'])
-    #ax2.set_xlim(0,2160)
     ax2.set_ylim(0,2)
     ax2.set_yticks([0,1,2])
+    ax2.set_xlabel("Date")
+    ax2.set_title('PDO Phase Change Months')
 
     fig3,ax3 = plt.subplots(figsize=(15,4))
     ax3.step(PDOindex['Date'], phaseBool)
-    #ax3.set_xlim(0, 2160)
     ax3.set_ylim(0,2)
     ax3.set_yticks([0,1,2])
+    ax3.set_xlabel("Date")
+    ax3.set_title('PDO Phase Change Months with Gap Fill')
     plt.show()
 
     return NeutralDates
@@ -93,4 +100,4 @@ file = "NOAA_PDO_Index.csv"
 NOAAdata = pd.read_csv(file)
 PDOindex = pd.DataFrame(NOAAdata)
 
-neutral = ID_Phase_NOAA(PDOindex, 72, 0.1, 24)
+neutral = ID_Phase_NOAA(PDOindex, 72, 0.1, 20)
