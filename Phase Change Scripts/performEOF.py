@@ -53,7 +53,7 @@ def PDO_index(ssts):
     return pc1
 
 
-"""
+
 #testing of the function
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -63,7 +63,7 @@ data = xr.open_dataset("Data/SSTmem15.nc")
 
 index = PDO_index(data)
 
-
+"""
 plt.figure()
 index[:, 0].plot(color = "blue")
 ax = plt.gca()
@@ -74,7 +74,7 @@ ax.set_ylabel("Normalized Units")
 
 ax.set_ylim(-4, 4)
 ax.set_title("PC1: The Index Timeseries")
-
+"""
 
 bound = 0.1
 mon_length = 72
@@ -108,4 +108,3 @@ ax2.set_ylim(0,2)
 ax2.set_yticks([0,1,2])
 
 plt.savefig("index.png")
-"""
