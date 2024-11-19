@@ -32,21 +32,21 @@ def member_zscore(filepath):
 
 # Now, to check things are going ok, let's plot the zscores on a contour plot. Yay.
 
-data = member_zscore('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem11.nc')
+# data = member_zscore('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem11.nc')
 
-# Turn cftime dates into something I can deal with.ikl;
-data['time'] = data['time'].dt.strftime('%Y%m%d')
+# # Turn cftime dates into something I can deal with.ikl;
+# data['time'] = data['time'].dt.strftime('%Y%m%d')
 
-# Take the 4D array down to 2D for a specific month and time.
-test = data.where((data['time'] == '19840501') & (data.month == 5), drop = True)
-test = test.squeeze(('time'), drop = True)
+# # Take the 4D array down to 2D for a specific month and time.
+# test = data.where((data['time'] == '19840501') & (data.month == 5), drop = True)
+# test = test.squeeze(('time'), drop = True)
 
-# Plot a contour of zscores for the specific day/month.
-#print(test)
-X, Y = np.meshgrid(test.lon, test.lat)
-fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
-ax.coastlines()
-my_ax = ax.contourf(X, Y, test, transform = ccrs.PlateCarree())
-ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-fig.colorbar(my_ax, ax = ax)
-plt.show()
+# # Plot a contour of zscores for the specific day/month.
+# #print(test)
+# X, Y = np.meshgrid(test.lon, test.lat)
+# fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
+# ax.coastlines()
+# my_ax = ax.contourf(X, Y, test, transform = ccrs.PlateCarree())
+# ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
+# fig.colorbar(my_ax, ax = ax)
+# plt.show()
