@@ -7,14 +7,11 @@ import xarray as xr
 
 def ID_Phase(PDOindex, period, bound):
     
-    PDOindex['Phase Change'] = 0
-
-    """
-    NeutralDates = np.full((len(PDOindex) - period, 1), np.NaN)
-    NeutralDates = NeutralDates.astype(datetime)
-    """
-
     NeutralDates = []
+
+    #add zeros of length half of the period to the end to account for the centered rolling mean
+    for i in range(0, 36):
+        phaseBool.append(0) 
 
     #fill the half of a period length with zeros so it accounts for a centered mean
     phaseBool = [0 * 36]
