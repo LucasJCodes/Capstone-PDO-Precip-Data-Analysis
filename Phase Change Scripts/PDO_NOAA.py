@@ -5,7 +5,7 @@ import datetime
 import pandas as pd
 import xarray as xr
 
-def ID_Phase_NOAA(PDOindex, period, bound):
+def ID_Phase_NOAA(PDOindex, period, bound, gap):
 
     PDOindex['Date'] = pd.to_datetime(PDOindex[['Year', 'Month']].assign(Day=1))
     PDOindex['Phase Change'] = 0
@@ -37,25 +37,25 @@ def ID_Phase_NOAA(PDOindex, period, bound):
         else: 
             phaseBool.append(0)
 
-    for i in range(0, int(period/2)):
+    #add zeros of length half of the period to the end to account for the centered rolling mean
+    for i in range(0, int((period/2))):
         phaseBool.append(0)
 
     #print(PDOindex)
 
-    for i in range(0, len(phaseBool)-6):
+    for i in range(0, len(phaseBool)-gap):
         Flag = False
 
-        for j in range(0,5):
+        if (phaseBool[i] == 1):
+            for j in range(1, gap+1):
 
-            if phaseBool[i+j] == 1:
-                Flag = True
+                if phaseBool[i+j] == 1:
+                    Flag = True
 
         if Flag == True:
-            phaseBool[i] = 1
-
-    #add zeros of length half of the period to the end to account for the centered rolling mean
-    #phaseBool.append(np.zeros(int((period / 2))))
+            phaseBool[i + 1] = 1
     
+
     print(len(NeutralDates))
 
     PDOindex['Color'] = ['red' if value > bound else 'blue' if value < -bound else 'black' for value in PDOindex['Value']]
@@ -73,8 +73,15 @@ def ID_Phase_NOAA(PDOindex, period, bound):
 
     fig2,ax2 = plt.subplots(figsize=(15,4))
     ax2.step(PDOindex['Date'], PDOindex['Phase Change'])
+    #ax2.set_xlim(0,2160)
     ax2.set_ylim(0,2)
     ax2.set_yticks([0,1,2])
+
+    fig3,ax3 = plt.subplots(figsize=(15,4))
+    ax3.step(PDOindex['Date'], phaseBool)
+    #ax3.set_xlim(0, 2160)
+    ax3.set_ylim(0,2)
+    ax3.set_yticks([0,1,2])
     plt.show()
 
     return NeutralDates
@@ -86,4 +93,4 @@ file = "NOAA_PDO_Index.csv"
 NOAAdata = pd.read_csv(file)
 PDOindex = pd.DataFrame(NOAAdata)
 
-neutral = ID_Phase_NOAA(PDOindex, 72, 0.1)
+neutral = ID_Phase_NOAA(PDOindex, 72, 0.1, 24)
