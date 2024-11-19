@@ -52,10 +52,10 @@ def prettyColors(data, title, cmap):
     #CHANGE THIS LINE DEPENDING ON INTERVAL
     plt.show()
 
-#Monthly interval
-roy = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = [6, 7, 8])
+# Avg Summertime Precip
+roy = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = np.arange(6, 9))
 prettyColors(data = roy, title = 'Average Summertime Precipitation (mm)', cmap = 'YlGn')
 
-#Annual interval
-daniel = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+# Avg Annual Precip
+daniel = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = np.arange(1, 13))
 prettyColors(data = daniel, title = 'Average Annual Precipitation (mm)', cmap = 'YlGn')
