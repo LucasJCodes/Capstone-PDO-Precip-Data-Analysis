@@ -1,5 +1,8 @@
 # Need a function that's going to count the number of januarys, februarys, etc. that are classified as phase changes.
 
+import xarray as xr
+import numpy as np
+
 def phaseMonths(boolean):
     # Takes in a boolean from one member, then finds the number of phase changes (boolean == 1) per month and puts them in a list.
 
