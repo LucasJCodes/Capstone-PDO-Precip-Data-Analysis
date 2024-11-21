@@ -14,16 +14,16 @@ def ID_Phase(PDOindex, period, bound):
     for i in range(0, 36):
         phaseBool.append(0) 
 
-    for i in range(0, len(PDOindex)-period):
+    for i in range(0, len(PDOindex.values)-period):
         SUM = 0
 
         for j in range(0, period):
-            SUM = SUM + PDOindex[i+j]
+            SUM = SUM + PDOindex.values[i+j]
         
         Average = SUM/period
 
         if ((Average >= -bound) and (Average <= bound)):
-            CentralMonth = i + period // 2
+            CentralMonth = (i + period) // 2
             NeutralDates.append((PDOindex.time[CentralMonth].values).item())
             phaseBool.append(1)
 
@@ -34,11 +34,10 @@ def ID_Phase(PDOindex, period, bound):
         Flag = False
 
         if (phaseBool[i] == 1):
-            for j in range(0,5):
-
+            for j in range(1,6):
                 if phaseBool[i+j] == 1:
                     Flag = True
-
+                    
         if Flag == True:
             phaseBool[i + 1] = 1
 
