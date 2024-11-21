@@ -64,32 +64,14 @@ from PDOindex import ID_Phase
 bound = 0.1
 mon_length = 72
 
-data_in = xr.open_dataset("Data/SSTmem11.nc")
+data_in = xr.open_dataset("Data/SSTmem18.nc")
 
 index = PDO_index(data_in)
 
-"""
-plt.figure()
-index[:, 0].plot(color = "blue")
-ax = plt.gca()
-ax.axhline(0, color = "black")
-
-ax.set_xlabel("Years")
-ax.set_ylabel("Normalized Units")
-
-ax.set_ylim(-4, 4)
-ax.set_title("PC1: The Index Timeseries")
-plt.show()
-"""
-
 index = index.to_dataset()
-#dates = index["time"].to_index().to_datetimeindex()
 squeezed = index.squeeze(dim = "mode")
 
-print(squeezed)
-
 neutral, dates = ID_Phase(squeezed["pcs"], mon_length, bound)
-print(neutral)
 
 #Since the plot wants to use datetime formats, we need to convert cftime into datetime formats, done through saving the dataset as a DataFrame and using a Pandas command
 data = squeezed["pcs"].to_dataframe()
@@ -100,15 +82,13 @@ data['time'] = pd.to_datetime([f"{date.year}-{date.month:02d}-{date.day:02d}" fo
 
 data['Color'] = xr.DataArray(['red' if pcs > bound else 'blue' if pcs < -bound else 'black' for pcs in index["pcs"]])#, dims = index["pcs"].dims, coords = index["pcs"].coords)
 
-print(data["pcs"].values)
-
 fig,ax = plt.subplots(2, 1, figsize=(15,4))
 
-width = (data['time'].iloc[1] - data['time'].iloc[0]).days * 0.8
+width = (data['time'].iloc[1] - data['time'].iloc[0]).days * 0.9
 ax1 = ax[0].bar(data['time'].values, data["pcs"], width = width, color = data['Color'])
 
 ax2 = ax[1].step(data['time'], neutral)
-#ax2.set_ylim(0,2)
-#ax2.set_yticks([0,1,2])
+ax[1].set_ylim(0,2)
+ax[1].set_yticks([0,1,2])
 
 plt.show()
