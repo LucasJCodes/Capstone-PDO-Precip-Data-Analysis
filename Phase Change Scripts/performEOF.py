@@ -60,9 +60,15 @@ import xarray as xr
 import matplotlib.pyplot as plt
 from PDOindex import ID_Phase
 
-data_in = xr.open_dataset("Data/SSTmem15.nc")
+
+bound = 0.1
+mon_length = 72
+
+data_in = xr.open_dataset("Data/SSTmem11.nc")
 
 index = PDO_index(data_in)
+
+print(index)
 
 """
 plt.figure()
@@ -75,19 +81,15 @@ ax.set_ylabel("Normalized Units")
 
 ax.set_ylim(-4, 4)
 ax.set_title("PC1: The Index Timeseries")
+plt.show()
 """
-
-bound = 0.1
-mon_length = 72
-
-neutral = ID_Phase(index, mon_length, bound)
 
 index = index.to_dataset()
 #dates = index["time"].to_index().to_datetimeindex()
 squeezed = index.squeeze(dim = "mode")
-#index = index.to_dataframe()
 
-#dates = dates[:len(index["pcs"])]
+neutral = ID_Phase(index, mon_length, bound)[0]
+print(neutral)
 
 #Since the plot wants to use datetime formats, we need to convert cftime into datetime formats, done through saving the dataset as a DataFrame and using a Pandas command
 data = squeezed["pcs"].to_dataframe()
@@ -96,15 +98,16 @@ data.reset_index(drop = True, inplace = True)
 
 data['time'] = pd.to_datetime([f"{date.year}-{date.month:02d}-{date.day:02d}" for date in data['time']])
 
+data['Color'] = xr.DataArray(['red' if pcs > bound else 'blue' if pcs < -bound else 'black' for pcs in index["pcs"]])#, dims = index["pcs"].dims, coords = index["pcs"].coords)
 
-#index['Color'] = xr.DataArray(['red' if pcs > bound else 'blue' if pcs < -bound else 'black' for pcs in index["pcs"]])#, dims = index["pcs"].dims, coords = index["pcs"].coords)
-
+print(data["pcs"].values)
 
 fig,ax = plt.subplots(2, 1, figsize=(15,4))
-ax1 = ax[0].bar(data['time'].values.reshape(1260), index["pcs"].values.reshape(1260)) #, width=1260, color = index['Color'])
 
-#fig2,ax2 = plt.subplots(figsize=(15,4))
-ax2 = ax[1].step(data['time'], neutral[0])
+width = (data['time'].iloc[1] - data['time'].iloc[0]).days * 0.8
+ax1 = ax[0].bar(data['time'].values, data["pcs"], width = width, color = data['Color'])
+
+ax2 = ax[1].step(data['time'], neutral)
 #ax2.set_ylim(0,2)
 #ax2.set_yticks([0,1,2])
 
