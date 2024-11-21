@@ -8,11 +8,23 @@ import glob
 def phaseMask(zscores, booleans):
     # Zscores is a LIST of the zscores datasets for each members, and pc_months is the list of phase change months.
 
-    pc_months = booleans.where(booleans['is_phase_change'] == 1, drop = False)
+    #modified_zscores = zscores[0][:][:].where(booleans == 1, other=np.nan)
 
-    test = zscores[0][:][:] * pc_months["is_phase_change"][0]
+    #pc_months = booleans.where(booleans['is_phase_change'] == 1, drop = False)
 
-    print(test)
+    #test = zscores[0][:][:] * pc_months["is_phase_change"][0]
+
+    modified_zscores = []
+    
+    for member in range(len(zscores)):
+
+        # Ensure alignment and apply the boolean mask
+        modified = zscores[member].where(booleans == 1, other=np.nan)
+        modified_zscores.append(modified)
+
+    return modified_zscores
+
+    #print(test)
 
     # Subset zscores based only the months that are phase changes (the boolean == 1).
     """
@@ -29,15 +41,25 @@ def phaseMask(zscores, booleans):
 
 
 # Need to find each member's zscores first.
-filenames = sorted(glob.glob('/Users/lucas/source/repos/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc'))
+filenames = sorted(glob.glob('/Users/defor/OneDrive/Documents/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc'))
 #print(filenames)
 
-zscores = []
-for f in filenames:
-    zscores.append(precip_zscores.member_zscore(f))
+zscores = [precip_zscores.member_zscore(f) for f in filenames]
+
+#zscores = []
+#for f in filenames:
+    #zscores.append(precip_zscores.member_zscore(f))
 #print(zscores)
 
-bools = xr.open_dataset('/Users/lucas/source/repos/Capstone-PDO-Precip-Data-Analysis/Data/phaseChanges.nc')
+bools = xr.open_dataset('/Users/defor/OneDrive/Documents/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/phaseChanges.nc')
 #print(bools)
 
-test = phaseMask(zscores, bools)
+print(zscores[0].shape)  # Shape of a single zscore dataset
+print(bools['is_phase_change'].shape)  # Shape of the boolean mask
+
+
+modified_zscores = phaseMask(zscores, bools['is_phase_change'])
+
+#test = phaseMask(zscores, bools)
+
+print(modified_zscores[0])
