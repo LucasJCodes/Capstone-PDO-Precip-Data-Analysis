@@ -68,8 +68,6 @@ data_in = xr.open_dataset("Data/SSTmem11.nc")
 
 index = PDO_index(data_in)
 
-print(index)
-
 """
 plt.figure()
 index[:, 0].plot(color = "blue")
@@ -88,7 +86,9 @@ index = index.to_dataset()
 #dates = index["time"].to_index().to_datetimeindex()
 squeezed = index.squeeze(dim = "mode")
 
-neutral = ID_Phase(index, mon_length, bound)[0]
+print(squeezed)
+
+neutral, dates = ID_Phase(squeezed["pcs"], mon_length, bound)
 print(neutral)
 
 #Since the plot wants to use datetime formats, we need to convert cftime into datetime formats, done through saving the dataset as a DataFrame and using a Pandas command
