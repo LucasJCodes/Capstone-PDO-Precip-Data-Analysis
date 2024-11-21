@@ -39,4 +39,5 @@ seasons_sums = [
 fig, ax = plt.subplots()
 ax.bar(seasons, seasons_sums, width = 0.6, color = 'seagreen')
 ax.set_title('Number of Phase Change Months Per Season - All Members')
+ax.set_ylim(350, 400)
 plt.show()
