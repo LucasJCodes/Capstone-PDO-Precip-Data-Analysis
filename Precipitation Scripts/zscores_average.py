@@ -15,6 +15,9 @@ def phaseMask(zscores, booleans):
     modified = zscores * pc_months['is_phase_change']
     return modified
 
+"""  This code is to test the above function to ensure we can get monthly groupings of only phase change precip
+data.  Much of this code is used when we create the monthly zscores plots
+
 # Retrieve the precip files, sorted so that each member is in order.
 filenames = sorted(glob.glob('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc'))
 
@@ -36,4 +39,4 @@ grouped = grouped.mean(dim = ['members', 'time'])
 
 # Print the result!
 print(grouped)
-
+"""
