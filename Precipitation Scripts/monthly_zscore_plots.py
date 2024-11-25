@@ -66,7 +66,7 @@ for month in grouped['month']:
     X, Y = np.meshgrid(selected_by_month.lon, selected_by_month.lat)
     fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
     ax.coastlines()
-    my_ax = ax.contourf(X, Y, selected_by_month, transform = ccrs.PlateCarree())
+    my_ax = ax.contourf(X, Y, selected_by_month, transform = ccrs.PlateCarree(), cmap = "BrBG")
     ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
     fig.colorbar(my_ax, ax = ax)
     ax.set_title("Zscore for all members in the month of " + str(month_name))
