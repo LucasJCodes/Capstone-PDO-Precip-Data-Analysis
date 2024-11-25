@@ -1,22 +1,11 @@
-# Hi yet again. Today we're going to subset the zscores that fall within PDO phase change months and average them together by month.
-
 import xarray as xr
 import numpy as np
+import zscores_average
 import precip_zscores
 import glob
+import precipAvg_interval as pcp
 
-def phaseMask(zscores, booleans):
-    # Zscores is a dataset of the zscores datasets for all members, and pc_months is the list of phase change months.
-
-    # Turn the zeros in the boolean into NaNs.
-    pc_months = booleans.where(booleans['is_phase_change'] == 1, drop = False)
-
-    # Multiply the boolean mask onto the zscores so that only zscores during phase change months have values other than NaN.
-    modified = zscores * pc_months['is_phase_change']
-    return modified
-
-"""  This code is to test the above function to ensure we can get monthly groupings of only phase change precip
-data.  Much of this code is used when we create the monthly zscores plots
+#Some of this code is a copy-paste from previous Python files (see above - this one is for zscores_average). Since we want all members, that part will be kept.
 
 # Retrieve the precip files, sorted so that each member is in order.
 filenames = sorted(glob.glob('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc'))
@@ -31,12 +20,25 @@ bools = xr.open_dataset('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-P
 bools = bools.rename({"month_bool": "time"})
 
 # Run the function.
-test = phaseMask(zscores, bools)
+test = zscores_average.phaseMask(zscores, bools)
 
 # Group times by month, then take the mean across members and months. Taking the mean ignores NaNs from the function.
 grouped = test.groupby('time.month')
 grouped = grouped.mean(dim = ['members', 'time'])
 
-# Print the result!
-print(grouped)
-"""
+# Make seasons to reference in interval function.
+winter = np.arange(0, 3)
+spring = np.arange(3, 6)
+summer = np.arange(6, 9)
+fall = np.arange(9, 12)
+seasons = [winter, spring, summer, fall]
+
+# Run interval function to get averages by season.
+seasonal_avgs = []
+for i in seasons:
+    seasonal_avgs.append(pcp.interval(grouped, i))
+
+#Plot the selected month with prettyColors function.
+szn_names = ['Winter', 'Spring', 'Summer', 'Fall']
+for i in range(0, 4):
+    pcp.prettyColors(seasonal_avgs[i], title = 'Average ' + szn_names[i] + ' Z-Scores', cmap = 'BrBG', save = ('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/' + szn_names[i] + 'AvgZscores.png'))

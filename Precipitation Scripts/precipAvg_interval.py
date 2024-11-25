@@ -29,13 +29,12 @@ def pcpAvg(filepaths):
     mem_sum = pcp.mean(dim = ['member', 'time'])
     return mem_sum
 
-def interval(filepaths, months):
-    data = pcpAvg(filepaths)
+def interval(data, months):
     interval = data.where((data.month.isin(months)), drop = True)
     interval = interval.sum(dim = 'month')
     return interval
 
-def prettyColors(data, title, cmap):
+def prettyColors(data, title, cmap, save):
     #PLOTTING
     #Determine axes and the figure we refer to throughout the code
     X, Y = np.meshgrid(data.lon, data.lat)
@@ -49,13 +48,4 @@ def prettyColors(data, title, cmap):
     ax.set_title(title)
     fig.colorbar(my_ax, ax = ax)
     #save figure
-    #CHANGE THIS LINE DEPENDING ON INTERVAL
-    plt.show()
-
-# Avg Summertime Precip
-roy = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = np.arange(6, 9))
-prettyColors(data = roy, title = 'Average Summertime Precipitation (mm)', cmap = 'YlGn')
-
-# Avg Annual Precip
-daniel = interval(filepaths = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc', months = np.arange(1, 13))
-prettyColors(data = daniel, title = 'Average Annual Precipitation (mm)', cmap = 'YlGn')
+    plt.savefig(save)
