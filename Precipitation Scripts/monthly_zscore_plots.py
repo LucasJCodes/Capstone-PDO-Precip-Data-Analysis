@@ -38,23 +38,37 @@ grouped = test.groupby('time.month')
 grouped = grouped.mean(dim = ['members', 'time'])
 
 # Print the result!
-#print(grouped)
+print(grouped)
 
 #PLOTTING CONTOUR MAPS (this part is somewhat new?)
 
 # Might need these line, but let's see first
 # data['time'] = data['time'].dt.strftime('%Y%m%d')
 
-# Choose which month to plot
-selected_by_month = grouped.where((grouped.month == 1), drop = True)
-selected_by_month = selected_by_month.squeeze(('month'), drop = True)
-print(selected_by_month)
+#Dictionary for the months
+months = {'1': 'January', '2': 'February', '3': 'March',
+          '4': 'April', '5': 'May', 
+          '6': 'June', '7': 'July', '8': 'August', 
+          '9': 'September', '10': 'October', '11': 'November', '12': 'December',}
 
-#Plot the selected month
-X, Y = np.meshgrid(selected_by_month.lon, selected_by_month.lat)
-fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
-ax.coastlines()
-my_ax = ax.contourf(X, Y, selected_by_month, transform = ccrs.PlateCarree())
-ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-fig.colorbar(my_ax, ax = ax)
-plt.show()
+# For loop that will go through each month and create a plot of the average precip zscores of all members
+for month in grouped['month']:
+    # Choose which month to plot
+    selected_by_month = grouped.where((grouped.month == month), drop = True)
+    selected_by_month = selected_by_month.squeeze(('month'), drop = True)
+
+    #Find the correct month for the title
+    month_dict_value = month.item() #converts into integer
+    month_dict_value = str(month_dict_value) #converts into string
+    month_name = months.get(month_dict_value)
+    
+    #Plot the selected month
+    X, Y = np.meshgrid(selected_by_month.lon, selected_by_month.lat)
+    fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
+    ax.coastlines()
+    my_ax = ax.contourf(X, Y, selected_by_month, transform = ccrs.PlateCarree())
+    ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
+    fig.colorbar(my_ax, ax = ax)
+    ax.set_title("Zscore for all members in the month of " + str(month_name))
+    plt.savefig("Plots/"+month_name+'_zscore.png')
+    
