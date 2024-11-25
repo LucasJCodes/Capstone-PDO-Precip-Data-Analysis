@@ -77,20 +77,21 @@ def ID_Phase_NOAA(PDOindex, period, bound, gap):
     ax.legend(handles=legend_elements)
 
     fig2,ax2 = plt.subplots(figsize=(15,4))
-    ax2.step(PDOindex['Date'], PDOindex['Phase Change'])
+    ax2.step(PDOindex['Date'], phaseBool)
     ax2.set_ylim(0,2)
     ax2.set_yticks([0,1,2])
-    ax2.set_xlabel("Date")
-    ax2.set_title('PDO Phase Change Months (No Gap Fill)')
-
-    fig3,ax3 = plt.subplots(figsize=(15,4))
-    ax3.step(PDOindex['Date'], phaseBool)
-    ax3.set_ylim(0,2)
-    ax3.set_yticks([0,1,2])
-    ax3.set_xlabel("Date (Months)")
-    ax3.set_ylabel("Is Phase Change (T/F)")
-    ax3.set_title('PDO Phase Change Months')
+    ax2.set_xlabel("Date (Months)")
+    ax2.set_ylabel("Is Phase Change (T/F)")
+    ax2.set_title('PDO Phase Change Months')
     plt.show()
+
+    '''
+    ax[2].step(PDOindex['Date'], PDOindex['Phase Change'])
+    ax[2].set_ylim(0,2)
+    ax[2].set_yticks([0,1,2])
+    ax[2].set_xlabel("Date")
+    ax[2].set_title('PDO Phase Change Months (No Gap Fill)')
+    '''
 
     return NeutralDates
 
