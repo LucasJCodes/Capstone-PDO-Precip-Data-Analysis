@@ -71,9 +71,9 @@ def ID_Phase_NOAA(PDOindex, period, bound, gap):
     fig,ax = plt.subplots(figsize=(15,4))
     ax.bar(PDOindex['Date'], PDOindex['Value'], width=45, color=PDOindex['Color'])
     ax.plot(PDOindex['Date'], PDOindex['Rolling Average'], color='black', linewidth=2, label=f'{period}-Month Rolling Average')
-    ax.set_xlabel("Date")
+    ax.set_xlabel("Date (Months)")
     ax.set_ylabel("PDO Index Value")
-    ax.set_title("NOAA PDO Index")
+    ax.set_title("NOAA PDO Index with Rolling Average")
     ax.legend(handles=legend_elements)
 
     fig2,ax2 = plt.subplots(figsize=(15,4))
@@ -81,14 +81,15 @@ def ID_Phase_NOAA(PDOindex, period, bound, gap):
     ax2.set_ylim(0,2)
     ax2.set_yticks([0,1,2])
     ax2.set_xlabel("Date")
-    ax2.set_title('PDO Phase Change Months')
+    ax2.set_title('PDO Phase Change Months (No Gap Fill)')
 
     fig3,ax3 = plt.subplots(figsize=(15,4))
     ax3.step(PDOindex['Date'], phaseBool)
     ax3.set_ylim(0,2)
     ax3.set_yticks([0,1,2])
-    ax3.set_xlabel("Date")
-    ax3.set_title('PDO Phase Change Months with Gap Fill')
+    ax3.set_xlabel("Date (Months)")
+    ax3.set_ylabel("Is Phase Change (T/F)")
+    ax3.set_title('PDO Phase Change Months')
     plt.show()
 
     return NeutralDates
