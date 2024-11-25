@@ -41,4 +41,4 @@ for i in seasons:
 #Plot the selected month with prettyColors function.
 szn_names = ['Winter', 'Spring', 'Summer', 'Fall']
 for i in range(0, 4):
-    pcp.prettyColors(seasonal_avgs[i], title = 'Average ' + szn_names[i] + ' Z-Scores', cmap = 'BrBG', save = ('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/Season' + str(i) + 'AvgZscores.png'))
+    pcp.prettyColors(seasonal_avgs[i], title = 'Average ' + szn_names[i] + ' Z-Scores', cmap = 'BrBG', save = ('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/' + szn_names[i] + 'AvgZscores.png'))
