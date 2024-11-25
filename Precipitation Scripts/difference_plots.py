@@ -36,14 +36,17 @@ print(difference)
 annual = pcp.interval(difference, months = np.arange(0, 12))
 
 # Plot the average annual difference.
-X, Y = np.meshgrid(annual.lon, annual.lat)
-fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
-ax.coastlines()
 
-my_ax = ax.contourf(X, Y, annual, transform = ccrs.PlateCarree(), cmap = 'BrBG', vmin = -75, 
-vmax = 75)
-ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-ax.set_title('Average Annual PC Precipitation Anomaly (mm)')
-fig.colorbar(my_ax, ax = ax)
+pcp.prettyColors(annual, title = 'Average Annual PC Precipitation Anomaly (mm)', cmap = 'BrBG', save = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/Annual_DifferencePrecip.png', vmin = -75, vmax = 75)
+
+# X, Y = np.meshgrid(annual.lon, annual.lat)
+# fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
+# ax.coastlines()
+
+# my_ax = ax.contourf(X, Y, annual, transform = ccrs.PlateCarree(), cmap = 'BrBG', vmin = -75, 
+# vmax = 75)
+# ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
+# ax.set_title('Average Annual PC Precipitation Anomaly (mm)')
+# fig.colorbar(my_ax, ax = ax)
   
-plt.savefig('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/Annual_DifferencePrecip.png')
+# plt.savefig('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/Annual_DifferencePrecip.png')

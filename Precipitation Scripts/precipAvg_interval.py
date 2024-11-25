@@ -34,12 +34,12 @@ def interval(data, months):
     interval = interval.sum(dim = 'month')
     return interval
 
-def prettyColors(data, title, cmap, save):
+def prettyColors(data, title, cmap, save, **kwargs):
     X, Y = np.meshgrid(data.lon, data.lat)
     fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
     ax.coastlines()
 
-    my_ax = ax.contourf(X, Y, data, transform = ccrs.PlateCarree(), cmap = cmap)
+    my_ax = ax.contourf(X, Y, data, transform = ccrs.PlateCarree(), cmap = cmap, vmin = kwargs.get('vmin'), vmax = kwargs.get('vmax'))
     ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
     ax.set_title(title)
     fig.colorbar(my_ax, ax = ax)

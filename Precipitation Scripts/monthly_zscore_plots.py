@@ -8,25 +8,22 @@ Good codes to look at:
 '''
 
 import xarray as xr
-import numpy as np
 import zscores_average
 import precip_zscores
 import glob
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-import cartopy.feature as cfeature
+import precipAvg_interval as pcp
 
 #Some of this code is a copy-paste from previous Python files (see above - this one is for zscores_average). Since we want all members, that part will be kept.
 
 # Retrieve the precip files, sorted so that each member is in order.
-filenames = sorted(glob.glob('Data/PRECTmem*.nc'))
+filenames = sorted(glob.glob('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/PRECTmem*.nc'))
 
 # Calculate the z-scores for each member, then concatenate them with a new "members" dimension.
 zscores = [precip_zscores.member_zscore(f) for f in filenames]
 zscores = xr.concat(zscores, dim = 'members')
 
 # Read in the booleans that define which months are phase changes.
-bools = xr.open_dataset('Data/phaseChanges.nc')
+bools = xr.open_dataset('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Data/phaseChanges.nc')
 # Rename the month_bool dimension to "time" so that it can be multiplied directly into zscores inside the function.
 bools = bools.rename({"month_bool": "time"})
 
@@ -63,12 +60,7 @@ for month in grouped['month']:
     month_name = months.get(month_dict_value)
     
     #Plot the selected month
-    X, Y = np.meshgrid(selected_by_month.lon, selected_by_month.lat)
-    fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
-    ax.coastlines()
-    my_ax = ax.contourf(X, Y, selected_by_month, transform = ccrs.PlateCarree(), cmap = "BrBG")
-    ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-    fig.colorbar(my_ax, ax = ax)
-    ax.set_title("Zscore for all members in the month of " + str(month_name))
-    plt.savefig("Plots/"+month_name+'_zscore.png')
+    title = "Zscore for all members in the month of " + str(month_name)
+    pcp.prettyColors(selected_by_month, title, cmap = 'BrBG', save = "/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/"+month_name+'_zscore.png', vmin = -0.36, vmax = 0.36)
+
     
