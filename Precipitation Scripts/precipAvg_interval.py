@@ -35,17 +35,13 @@ def interval(data, months):
     return interval
 
 def prettyColors(data, title, cmap, save):
-    #PLOTTING
-    #Determine axes and the figure we refer to throughout the code
     X, Y = np.meshgrid(data.lon, data.lat)
     fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
-    #Fittingly, adds a coastline to the plots
     ax.coastlines()
-    #Adds data and other components
+
     my_ax = ax.contourf(X, Y, data, transform = ccrs.PlateCarree(), cmap = cmap)
     ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-    #CHANGE THIS LINE DEPENDING ON INTERVAL
     ax.set_title(title)
     fig.colorbar(my_ax, ax = ax)
-    #save figure
+  
     plt.savefig(save)
