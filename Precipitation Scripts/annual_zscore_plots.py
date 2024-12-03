@@ -27,4 +27,4 @@ grouped = test.groupby('time.month')
 grouped = grouped.mean(dim = ['members', 'time'])
 
 annual = pcp.interval(grouped, months = np.arange(0, 12))
-pcp.prettyColors(annual, title = 'Average Annual Z-Scores', cmap = 'BrBG', save = ('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/AnnualAvgZscores.png'))
+pcp.prettyColors(annual, title = 'Average Annual Z-Scores During PCs', cmap = 'BrBG', save = ('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/AnnualAvgZscores.png'), clabel = 'Z-Scores')

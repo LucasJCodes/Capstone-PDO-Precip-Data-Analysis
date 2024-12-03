@@ -22,8 +22,8 @@ for i in seasons:
 #Plot the selected month with prettyColors function.
 szn_names = ['Winter', 'Spring', 'Summer', 'Fall']
 for i in range(0, 4):
-    pcp.prettyColors(seasonal_avgs[i], title = 'Average ' + szn_names[i] + ' Precipitation (mm)', cmap = 'YlGn', save = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/' + szn_names[i] + 'AvgPrecip.png')
+    pcp.prettyColors(seasonal_avgs[i], title = 'Average ' + szn_names[i] + ' Precipitation', cmap = 'YlGn', save = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/' + szn_names[i] + 'AvgPrecip.png', clabel = 'Precipitation (mm)')
 
 # Avg Annual Precip
 annual = pcp.interval(data, months = np.arange(1, 13))
-pcp.prettyColors(annual, title = 'Average Annual Precipitation (mm)', cmap = 'YlGn', save = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/AnnualAvgPrecip.png')
+pcp.prettyColors(annual, title = 'Average Annual Precipitation', cmap = 'YlGn', save = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/AnnualAvgPrecip.png', clabel = 'Precipitation (mm)')

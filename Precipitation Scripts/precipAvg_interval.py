@@ -42,6 +42,6 @@ def prettyColors(data, title, cmap, save, **kwargs):
     my_ax = ax.contourf(X, Y, data, transform = ccrs.PlateCarree(), cmap = cmap, vmin = kwargs.get('vmin'), vmax = kwargs.get('vmax'))
     ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
     ax.set_title(title)
-    fig.colorbar(my_ax, ax = ax)
-  
+    fig.colorbar(my_ax, ax = ax).set_label(kwargs.get('clabel'))
+
     plt.savefig(save)
