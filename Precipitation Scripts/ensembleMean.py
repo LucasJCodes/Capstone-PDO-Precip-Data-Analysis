@@ -1,6 +1,6 @@
 import xarray as xr
 
-def ensMean(data, time):
+def ensMean(data):
     """
     This function computes the mean of precipitation data from a multi-member ensemble of the CESM2-LE experiment.
 
@@ -18,7 +18,7 @@ def ensMean(data, time):
 
     #calculate the mean along the members and by time
     byTime = data.groupby("time.month")
-    ensAvg = data.mean(dim = ["member", "time"])
+    ensAvg = data.mean(dim = ["members", "time"])
 
     #return the dataset 
     return ensAvg
@@ -29,7 +29,7 @@ def ensMean(data, time):
 filenames = "Data/PRECTmem*.nc"
 
 avgs = ensMean(filenames)
-"""
 
 test = xr.open_dataset("Data/PRECTmem11.nc")
 print(test)
+"""

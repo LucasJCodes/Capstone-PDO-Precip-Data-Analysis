@@ -5,6 +5,7 @@
 import numpy as np
 from scipy import stats
 import xarray as xr
+from cartopy.util import add_cyclic_point
 
 def ttest(data1, data2, alpha):
     """
@@ -31,9 +32,11 @@ def ttest(data1, data2, alpha):
     #create latitude and longitude arrays for the plotting the p values based on our western US region
     lat = np.arange(25.92, 55, 0.94)  
     lon = np.arange(225, 260, 1.25)  
+    
+    #print(pval)
 
     #create a data array holding the p values and add a cyclic point to remove blank line
-    xpval = xr.DataArray(pval, coords = {"latitude": lat, "longitude": lon}, dims = ["latitude", "longitude"])
+    xpval = xr.DataArray(add_cyclic_point(pval), coords = {"latitude": lat, "longitude": lon}, dims = ["latitude", "longitude"])
 
     #get only statistically significant p values for plotting
     
