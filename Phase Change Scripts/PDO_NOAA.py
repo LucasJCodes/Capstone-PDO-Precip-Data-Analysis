@@ -96,4 +96,4 @@ file = "NOAA_PDO_Index.csv"
 NOAAdata = pd.read_csv(file)
 PDOindex = pd.DataFrame(NOAAdata)
 
-neutral = ID_Phase_NOAA(PDOindex, 72, 0.1, 20)
+neutral = ID_Phase_NOAA(PDOindex, 72, 0.1, 6)
