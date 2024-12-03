@@ -25,7 +25,8 @@ def ttest(data1, data2, alpha):
             An array of the p-values which are less than the alpha significance threshold.
         
     """
-
+    print(data1)
+    print(data2)
     #perform the t test
     tstat, pval = stats.ttest_ind(data1, data2, axis = 0, equal_var = True, alternative = "two-sided")
     
@@ -36,7 +37,7 @@ def ttest(data1, data2, alpha):
     #print(pval)
 
     #create a data array holding the p values and add a cyclic point to remove blank line
-    xpval = xr.DataArray(add_cyclic_point(pval), coords = {"latitude": lat, "longitude": lon}, dims = ["latitude", "longitude"])
+    xpval = xr.DataArray(pval, coords = {"latitude": lat, "longitude": lon}, dims = ["latitude", "longitude"])
 
     #get only statistically significant p values for plotting
     

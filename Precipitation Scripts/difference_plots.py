@@ -24,8 +24,9 @@ modified = prect * pc_months['is_phase_change']
 # Group by month and average across months and members to get and ensemble mean for both phase change
 # and non phase change precipitation.
 pc_precip = ensembleMean.ensMean(modified)
-print(pc_precip)
+#print(pc_precip)
 total_precip = ensembleMean.ensMean(prect)
+#print(total_precip)
 
 """
 grouped = modified.groupby('time.month')
@@ -39,7 +40,7 @@ all_precip = pcp.pcpAvg(filenames)
 
 # Get the difference between average precip for phase change months and average precip for ALL months.
 difference = pc_precip - all_precip
-print(difference)
+#print(difference)
 
 annual = pcp.interval(difference, months = np.arange(0, 12))
 
