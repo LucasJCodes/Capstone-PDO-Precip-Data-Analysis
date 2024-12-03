@@ -63,28 +63,22 @@ def ID_Phase_NOAA(PDOindex, period, bound, gap):
 
     PDOindex['Rolling Average'] = PDOindex['Value'].rolling(window=period, center=True).mean()
 
-    legend_elements = [
-        Line2D([0], [0], color='red', lw=4, label='Positive PDO'),
-        Line2D([0], [0], color='blue', lw=4, label='Negative PDO'),
-        Line2D([0], [0], color='black', lw=2, label=f'{period}-Month Rolling Average')]
+    legend_elements = [Line2D([0], [0], color='black', lw=2, label=f'{period}-Month Rolling Average')]
 
-    fig,ax = plt.subplots(figsize=(15,4))
-    ax.bar(PDOindex['Date'], PDOindex['Value'], width=45, color=PDOindex['Color'])
-    ax.plot(PDOindex['Date'], PDOindex['Rolling Average'], color='black', linewidth=2, label=f'{period}-Month Rolling Average')
-    ax.set_xlabel("Date (Months)")
-    ax.set_ylabel("PDO Index Value")
-    ax.set_title("NOAA PDO Index with Rolling Average")
-    ax.legend(handles=legend_elements)
+    fig,ax = plt.subplots(2, 1, figsize=(15,4))
+    ax[0].bar(PDOindex['Date'], PDOindex['Value'], width=45, color=PDOindex['Color'])
+    ax[0].plot(PDOindex['Date'], PDOindex['Rolling Average'], color='black', linewidth=2, label=f'{period}-Month Rolling Average')
+    ax[0].set_ylabel("PDO Index")
+    ax[0].legend(handles=legend_elements, loc = "upper left")
 
-    fig2,ax2 = plt.subplots(figsize=(15,4))
-    ax2.step(PDOindex['Date'], phaseBool)
-    ax2.set_ylim(0,2)
-    ax2.set_yticks([0,1,2])
-    ax2.set_xlabel("Date (Months)")
-    ax2.set_ylabel("Is Phase Change (T/F)")
-    ax2.set_title('PDO Phase Change Months')
-    plt.show()
+    ax[1].step(PDOindex['Date'], phaseBool)
+    ax[1].set_ylim(0,2)
+    ax[1].set_yticks([0,1,2])
+    ax[1].set_xlabel("Date (Months)")
+    ax[1].set_ylabel("Phase Change (T/F)")
 
+    fig.suptitle("Observational PDO Index (top) and Phase Changes (bottom)")
+    plt.savefig("Plots/observationalIndex.png")
     '''
     ax[2].step(PDOindex['Date'], PDOindex['Phase Change'])
     ax[2].set_ylim(0,2)

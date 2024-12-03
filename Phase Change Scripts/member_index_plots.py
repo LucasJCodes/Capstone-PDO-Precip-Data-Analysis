@@ -1,6 +1,7 @@
 import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from PDOindex import ID_Phase
 from performEOF import PDO_index
 
@@ -32,14 +33,19 @@ for i in range(11, 21):
 
     fig,ax = plt.subplots(2, 1, figsize=(15,4))
 
+    legend_elements = [Line2D([0], [0], color='black', lw=2, label=f'{period}-Month Rolling Average')]
+
     width = (data['time'].iloc[1] - data['time'].iloc[0]).days * 0.9
     ax1 = ax[0].bar(data['time'].values, data["pcs"], width = width, color = data['Color'])
     ax[0].plot(data['time'], rollingAvg, color='black', linewidth=2, label=f'{period}-Month Rolling Average')
+    ax[0].set_ylabel("PDO Index")
+    ax[0].legend(handles = legend_elements, loc = "upper left")
 
     ax2 = ax[1].step(data['time'], neutral)
     ax[1].set_ylim(0,2)
     ax[1].set_yticks([0,1,2])
+    ax[1].set_ylabel("Phase Change (T/F)")
 
-    fig.suptitle("Member " + str(i) + " PDO index and Phase Changes")
+    fig.suptitle("Member " + str(i) + " PDO Index (top) and Phase Changes (bottom)")
 
     plt.savefig("Plots/member" + str(i) + "index.png")
