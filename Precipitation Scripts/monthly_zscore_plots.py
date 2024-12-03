@@ -60,7 +60,7 @@ for month in grouped['month']:
     month_name = months.get(month_dict_value)
     
     #Plot the selected month
-    title = "Zscore for all members in the month of " + str(month_name)
-    pcp.prettyColors(selected_by_month, title, cmap = 'BrBG', save = "/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/"+month_name+'_zscore.png', vmin = -0.36, vmax = 0.36)
+    title = "Average " + str(month_name) + " Z-Scores During PCs"
+    pcp.prettyColors(selected_by_month, title, cmap = 'BrBG', save = "/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/"+month_name+'_zscore.png', vmin = -0.36, vmax = 0.36, clabel = 'Z-Scores')
 
     

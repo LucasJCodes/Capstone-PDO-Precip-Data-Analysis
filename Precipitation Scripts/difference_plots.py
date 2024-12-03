@@ -23,39 +23,17 @@ modified = prect * pc_months['is_phase_change']
 
 # Group by month and average across months and members to get and ensemble mean for both phase change
 # and non phase change precipitation.
-pc_precip = ensembleMean.ensMean(modified)
-#print(pc_precip)
-total_precip = ensembleMean.ensMean(prect)
-#print(total_precip)
-
-"""
 grouped = modified.groupby('time.month')
 pc_precip = grouped.mean(dim = ['members', 'time'])
-"""
 
-pvalues = ttest.ttest(pc_precip, total_precip, 0.05)
 
 # Get the average precip across months for ALL months, including non-phase change months.
 all_precip = pcp.pcpAvg(filenames)
 
 # Get the difference between average precip for phase change months and average precip for ALL months.
 difference = pc_precip - all_precip
-#print(difference)
-
 annual = pcp.interval(difference, months = np.arange(0, 12))
 
 # Plot the average annual difference.
+pcp.prettyColors(annual, title = 'Average Annual PC Precipitation Anomaly', cmap = 'BrBG', save = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/Annual_DifferencePrecip.png', vmin = -75, vmax = 75, clabel = 'Anomaly (mm)')
 
-pcp.prettyColors(annual, title = 'Average Annual PC Precipitation Anomaly (mm)', cmap = 'BrBG', save = '/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/Annual_DifferencePrecip.png', vmin = -75, vmax = 75)
-
-# X, Y = np.meshgrid(annual.lon, annual.lat)
-# fig, ax = plt.subplots(nrows = 1, ncols = 1, subplot_kw = {'projection': ccrs.PlateCarree()})
-# ax.coastlines()
-
-# my_ax = ax.contourf(X, Y, annual, transform = ccrs.PlateCarree(), cmap = 'BrBG', vmin = -75, 
-# vmax = 75)
-# ax.add_feature(cfeature.STATES, zorder=1, linewidth=1, edgecolor='k')
-# ax.set_title('Average Annual PC Precipitation Anomaly (mm)')
-# fig.colorbar(my_ax, ax = ax)
-  
-# plt.savefig('/Users/dfencekey/Desktop/Coding/Capstone/Capstone-PDO-Precip-Data-Analysis/Plots/Annual_DifferencePrecip.png')
