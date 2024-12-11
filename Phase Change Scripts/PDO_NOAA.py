@@ -77,7 +77,7 @@ def ID_Phase_NOAA(PDOindex, period, bound, gap):
     ax[1].set_xlabel("Date (Months)")
     ax[1].set_ylabel("Phase Change (T/F)")
 
-    fig.suptitle("Observational PDO Index (top) and Phase Changes (bottom)")
+    fig.suptitle("Historical PDO Index (top) and Phase Changes (bottom)")
     plt.savefig("Plots/observationalIndex.png")
     '''
     ax[2].step(PDOindex['Date'], PDOindex['Phase Change'])
@@ -96,4 +96,4 @@ file = "NOAA_PDO_Index.csv"
 NOAAdata = pd.read_csv(file)
 PDOindex = pd.DataFrame(NOAAdata)
 
-neutral = ID_Phase_NOAA(PDOindex, 72, 0.1, 6)
+neutral = ID_Phase_NOAA(PDOindex, 72, 0.1, 5)
